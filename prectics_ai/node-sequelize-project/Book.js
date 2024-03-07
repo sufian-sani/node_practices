@@ -8,6 +8,10 @@ const Book = sequelize.define('Book', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    summary: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     // Add a foreign key for the Author model
     authorId: {
         type: DataTypes.INTEGER,

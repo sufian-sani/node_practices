@@ -5,6 +5,8 @@ const sequelize = require('./database');
 const Book = require('./Book');
 const Author = require('./Author');
 
+const authorRoutes = require('./author');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -18,9 +20,10 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 // Routes
+app.use('/api/authors', authorRoutes);
 app.get('/api/books', async (req, res) => {
     try {
-        const books = await Book.findAll({ include: Author });
+        const books = await Book.findAll();
         res.json(books);
     } catch (error) {
         console.error('Error fetching books:', error.message);
@@ -28,8 +31,24 @@ app.get('/api/books', async (req, res) => {
     }
 });
 
+app.get('/api/books/:id', async (req, res) => {
+    const bookId = req.params.id;
+
+    try {
+        const book = await Book.findByPk(bookId);
+        if (!book) {
+            return res.status(404).json({ error: 'Author not found' });
+        }
+        res.json(book);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 app.post('/api/books', async (req, res) => {
-    const { title, authorName } = req.body;
+    const { title, authorName, summary} = req.body;
 
     try {
         // Check if the author already exists
@@ -41,7 +60,7 @@ app.post('/api/books', async (req, res) => {
         }
 
         // Create a new book with the author's ID
-        const newBook = await Book.create({ title, authorId: author.id });
+        const newBook = await Book.create({ title, authorId: author.id, summary});
         res.status(201).json(newBook);
     } catch (error) {
         console.error('Error creating a new book:', error.message);
@@ -51,7 +70,7 @@ app.post('/api/books', async (req, res) => {
 
 app.put('/api/books/:id', async (req, res) => {
     const bookId = req.params.id;
-    const { title, authorName } = req.body;
+    const { title, authorName, summary } = req.body;
 
     try {
         const existingBook = await Book.findByPk(bookId);
@@ -69,7 +88,7 @@ app.put('/api/books/:id', async (req, res) => {
         }
 
         // Update the book with the new title and author's ID
-        await existingBook.update({ title, authorId: author.id });
+        await existingBook.update({ title, summary, authorId: author.id });
 
         res.json(existingBook);
     } catch (error) {

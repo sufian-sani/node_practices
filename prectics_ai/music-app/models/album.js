@@ -2,7 +2,6 @@
 
 'use strict';
 const { DataTypes } = require('sequelize');
-const Musician =
 
 module.exports = (sequelize) => {
     const Album = sequelize.define('Album', {
@@ -17,7 +16,7 @@ module.exports = (sequelize) => {
     });
 
     Album.associate = (models) => {
-        Album.belongsTo(models.Musician, { foreignKey: 'musicianId' });
+        Album.belongsTo(models.Musician, { foreignKey: 'musicianId', as: 'musician', onDelete: 'CASCADE' });
     };
 
     return Album;

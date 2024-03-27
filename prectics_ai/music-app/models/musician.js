@@ -13,6 +13,10 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        musicianArea: {
+            type: DataTypes.STRING, // Define the new column
+            allowNull: true // You can set allowNull, default values, etc., as per your requirement
+        }
     });
 
     Musician.associate = (models) => {

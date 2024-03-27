@@ -5,8 +5,12 @@ const bodyParser = require('body-parser');
 const musicianRoutes = require('./routes/musician');
 const albumRoutes = require('./routes/album');
 const { sequelize } = require('./models');
+const cors = require('cors');
+
 
 const app = express();
+
+app.use(cors({ origin: 'http://localhost:5173' }));
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
@@ -14,6 +18,7 @@ app.use(bodyParser.json());
 // Use musician and album routes
 app.use('/api/musicians', musicianRoutes);
 app.use('/api/albums', albumRoutes);
+
 
 // Sync Sequelize models with the database
 sequelize.sync().then(() => {

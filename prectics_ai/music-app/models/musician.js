@@ -14,8 +14,8 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
         musicianArea: {
-            type: DataTypes.STRING, // Define the new column
-            allowNull: true // You can set allowNull, default values, etc., as per your requirement
+            type: DataTypes.STRING,
+            allowNull: true,
         }
     });
 
